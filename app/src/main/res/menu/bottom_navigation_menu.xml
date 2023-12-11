@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/navigation_home"
+        android:title="@string/home2"
+        android:icon="@drawable/ic_home"
+        app:destination="@id/homeFragment"/>
+
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:title="@string/dashboard"
+        android:icon="@drawable/ic_analytics"
+        app:destination="@id/dashboardFragment"/>
+
+    <item
+        android:id="@+id/navigation_settings"
+        android:title="@string/settings"
+        android:icon="@drawable/ic_settings"
+        app:destination="@id/settingsFragment"/>
+</menu>

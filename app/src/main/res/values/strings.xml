@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Firebase</string>
+    <string name="app_name">TaskFlow</string>
     <string name="login">Login</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -7,4 +7,18 @@
     <string name="loginNow">Already have an account? Login Now.</string>
     <string name="registerNow">Don\'t have an account? Register Now.</string>
     <string name="logout">Signout</string>
+    <string name="home">Home</string>
+    <string name="work">Work</string>
+    <string name="settings">Settings</string>
+    <string name="analytics">Analytics</string>
+    <string name="first_fragment">First Fragment</string>
+    <string name="second_fragment">Second Fragment</string>
+    <string name="third_fragment">Third_Fragment</string>
+    <string name="home2">Home</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="notifications">Notifications</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home_fragment">Home Fragment</string>
+    <string name="dashboard_fragment">Dashboard Fragment</string>
 </resources>
