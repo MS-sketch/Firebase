@@ -104,7 +104,9 @@ public class Login extends AppCompatActivity {
                                     Toast.makeText(Login.this, "Signed In",
                                             Toast.LENGTH_SHORT).show();
 
-                                    Intent MainView = new Intent(getApplicationContext(), bottomNav.class);
+                                    // TODO: Change to bottom_nav
+
+                                    Intent MainView = new Intent(getApplicationContext(), requiredUserDetails.class);
                                     startActivity(MainView);
                                     finish();
                                 }

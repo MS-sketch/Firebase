@@ -17,8 +17,18 @@
     <string name="home2">Home</string>
     <string name="dashboard">Dashboard</string>
     <string name="notifications">Notifications</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="home_fragment">Home Fragment</string>
     <string name="dashboard_fragment">Dashboard Fragment</string>
+    <string name="registration_details">Registration Details</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="date_of_birth">Date Of Birth</string>
+    <string name="date">YYYY/MM/DD</string>
+    <string name="welcome">Welcome</string>
+    <string name="please_login_with_your_information">Please login with your information</string>
+    <string name="forgot_pswd">Forgot Your Password?</string>
+    <string name="task_flow">TASK FLOW</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="please_enter_your_details">Please enter your information</string>
 </resources>
