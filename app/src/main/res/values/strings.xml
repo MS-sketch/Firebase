@@ -31,4 +31,10 @@
     <string name="task_flow">TASK FLOW</string>
     <string name="welcome_back">Welcome Back!</string>
     <string name="please_enter_your_details">Please enter your information</string>
+    <string name="next">Next</string>
+    <string name="next_step_1">Next (Step 1 of 3)</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="next_step_2">Next (Step 2 of 3)</string>
+    <string name="back_2">Back</string>
+    <string name="warning_1">Note: The information entered cannot be changed later.</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.ms.firebase;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,10 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -35,9 +31,7 @@ public class Login extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            Intent MainView = new Intent(getApplicationContext(), bottomNav.class);
-            startActivity(MainView);
-            finish();
+            openMainActivity();
         }
     }
 
@@ -57,72 +51,72 @@ public class Login extends AppCompatActivity {
 
         // Actions to be executed when clicked on "Login Now" Text View.
 
-        textViewRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent registerView = new Intent(getApplicationContext(), Register.class);
-                startActivity(registerView);
-                finish();
-            }
-        });
+        textViewRegister.setOnClickListener(view -> openRegister());
 
         // Actions to be executed when clicked on "Login" Button.
 
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
-                buttonLogin.setVisibility(View.GONE);
+        buttonLogin.setOnClickListener(view -> {
+            progressBar.setVisibility(View.VISIBLE);
+            buttonLogin.setVisibility(View.GONE);
 
-                String email, password;
-                email = String.valueOf(editTextEmail.getText());
-                password = String.valueOf(editTextPassword.getText());
+            String email, password;
+            email = String.valueOf(editTextEmail.getText());
+            password = String.valueOf(editTextPassword.getText());
 
-                if (TextUtils.isEmpty(email)){
-                    Toast.makeText(Login.this, "Please Enter Email", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                    buttonLogin.setVisibility(View.VISIBLE);
-                    return;
-                }
-
-                if (TextUtils.isEmpty(password)){
-                    buttonLogin.setVisibility(View.VISIBLE);
-                    Toast.makeText(Login.this, "Please Enter Password", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                    buttonLogin.setVisibility(View.VISIBLE);
-                    return;
-                }
-
-                mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                progressBar.setVisibility(View.GONE);
-
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(Login.this, "Signed In",
-                                            Toast.LENGTH_SHORT).show();
-
-                                    // TODO: Change to bottom_nav
-
-                                    Intent MainView = new Intent(getApplicationContext(), requiredUserDetails.class);
-                                    startActivity(MainView);
-                                    finish();
-                                }
-
-                                else {
-                                    // If sign in fails, display a message to the user.
-                                    Toast.makeText(Login.this, "Invalid Credentials!",
-                                            Toast.LENGTH_SHORT).show();
-                                    buttonLogin.setVisibility(View.VISIBLE);
-
-                                }
-                            }
-                        });
-
+            if (TextUtils.isEmpty(email)){
+                Toast.makeText(Login.this, "Please Enter Email", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                buttonLogin.setVisibility(View.VISIBLE);
+                return;
             }
+
+            if (TextUtils.isEmpty(password)){
+                buttonLogin.setVisibility(View.VISIBLE);
+                Toast.makeText(Login.this, "Please Enter Password", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                buttonLogin.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+
+                        progressBar.setVisibility(View.GONE);
+
+                        if (task.isSuccessful()) {
+                            Toast.makeText(Login.this, "Signed In",
+                                    Toast.LENGTH_SHORT).show();
+
+
+                            openMainActivity();
+                        }
+
+                        else {
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(Login.this, "Invalid Credentials!",
+                                    Toast.LENGTH_SHORT).show();
+                            buttonLogin.setVisibility(View.VISIBLE);
+
+                            // Empty the edit text.
+                            editTextEmail.setText("");
+                            editTextPassword.setText("");
+
+                        }
+                    });
+
         });
 
+    }
+
+    private void openMainActivity(){
+        Intent MainView = new Intent(getApplicationContext(), bottomNav.class);
+        startActivity(MainView);
+        finish();
+    }
+
+    private void openRegister(){
+        Intent registerView = new Intent(getApplicationContext(), Register.class);
+        startActivity(registerView);
+        finish();
     }
 }
