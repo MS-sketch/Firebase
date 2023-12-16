@@ -108,6 +108,8 @@ public class Login extends AppCompatActivity {
 
     }
 
+
+    // Opening Activities.
     private void openMainActivity(){
         Intent MainView = new Intent(getApplicationContext(), bottomNav.class);
         startActivity(MainView);

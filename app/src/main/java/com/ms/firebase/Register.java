@@ -275,6 +275,21 @@ public class Register extends AppCompatActivity {
                 return;
             }
 
+            // Get the Password Strength
+            int passStrength = passwordStrength(password);
+
+            if (passStrength == -1){
+                Toast.makeText(Register.this, "Passwords Is Too Weak!", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+                buttonReg.setVisibility(View.VISIBLE);
+                buttonBack_3.setVisibility(View.VISIBLE);
+
+                // Empty the edit text.
+                editTextConfirmPassword.setText("");
+                editTextPassword.setText("");
+                return;
+            }
+
             // TODO: ADD THE ADDITIONAL INFO IN REALTIME DB.
 
             mAuth.createUserWithEmailAndPassword(email, password)
@@ -299,6 +314,10 @@ public class Register extends AppCompatActivity {
                             buttonReg.setVisibility(View.VISIBLE);
                             buttonBack_3.setVisibility(View.VISIBLE);
 
+                            // Empty the edit text.
+                            editTextConfirmPassword.setText("");
+                            editTextPassword.setText("");
+
                         }
                     });
 
@@ -306,6 +325,7 @@ public class Register extends AppCompatActivity {
 
     }
 
+    // Other Functions
 
     // Open Date Picker
 
@@ -322,6 +342,47 @@ public class Register extends AppCompatActivity {
         dialog.show();
 
     }
+
+    // Password Strength Check
+    private int passwordStrength(String password){
+        String inputPassword = password;
+
+        int n = inputPassword.length();
+
+        boolean hasLower = false;
+        boolean hasUpper = false;
+        boolean hasDigit = false;
+        boolean specialChar = false;
+        String normalChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 ";
+
+        for (int i = 0; i < n; i++) {
+            if (Character.isLowerCase(inputPassword.charAt(i))) {
+                hasLower = true;
+            }
+            if (Character.isUpperCase(inputPassword.charAt(i))) {
+                hasUpper = true;
+            }
+            if (Character.isDigit(inputPassword.charAt(i))) {
+                hasDigit = true;
+            }
+            if (normalChars.indexOf(inputPassword.charAt(i)) == -1) {
+                specialChar = true;
+            }
+        }
+
+        // Strength of password
+        if (hasLower && hasUpper && hasDigit && specialChar && n >= 12) {
+            return 1;
+        } else if ((hasLower && hasUpper && n >= 9) || (specialChar && (hasUpper || hasLower || hasDigit) && n >= 9) ||
+                ((hasLower || hasDigit || hasUpper || specialChar) && n >= 14)) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+
+
+    // Opening Activities
 
     private void openLoginWindow(){
         Intent loginView = new Intent(getApplicationContext(), Login.class);
