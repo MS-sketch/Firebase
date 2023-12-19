@@ -19,8 +19,11 @@ import androidx.cardview.widget.CardView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
+
 
 public class Register extends AppCompatActivity {
 
@@ -34,11 +37,19 @@ public class Register extends AppCompatActivity {
 
     CardView cvStep_1, cvStep_2, cvStep_3;
 
+    // User Details
+    String uid;
+    String firstName, lastName, DOB, email, password, chkPassword;
 
 
     // Firebase Declaration
     FirebaseAuth mAuth;
 
+    FirebaseDatabase db;
+    DatabaseReference reference;
+
+
+    // MAIN ACTIVITY
     @Override
     public void onStart() {
         super.onStart();
@@ -54,7 +65,11 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+
+        // Firebase
+
         mAuth = FirebaseAuth.getInstance();
+
 
         // Init Of Variables
 
@@ -108,7 +123,6 @@ public class Register extends AppCompatActivity {
         cvStep_3 = findViewById(R.id.card_view);
 
 
-
         // 1st Card Functions.
 
         // Make the 1st card Visible.
@@ -123,18 +137,18 @@ public class Register extends AppCompatActivity {
 
             // Get the values of the items.
 
-            String firstName, lastName;
+
             firstName = String.valueOf(editTextFirstName.getText());
             lastName = String.valueOf(editTextLastName.getText());
 
             if (TextUtils.isEmpty(firstName)){
-                Toast.makeText(Register.this, "Please Enter First Name", Toast.LENGTH_SHORT).show();
+                makeToastSmall("Please Enter First Name");
                 return;
             }
 
             if (TextUtils.isEmpty(lastName)){
                 buttonReg.setVisibility(View.VISIBLE);
-                Toast.makeText(Register.this, "Please Enter Last", Toast.LENGTH_SHORT).show();
+                makeToastSmall("Please Enter Last");
                 return;
             }
 
@@ -187,12 +201,10 @@ public class Register extends AppCompatActivity {
 
         buttonNext_2.setOnClickListener(v -> {
 
-            String DOB;
-
             DOB = String.valueOf(editTextDOB.getText());
 
             if (TextUtils.isEmpty(DOB)){
-                Toast.makeText(Register.this, "Please Select DOB", Toast.LENGTH_SHORT).show();
+                makeToastSmall("Please Select DOB");
                 return;
             }
 
@@ -233,45 +245,35 @@ public class Register extends AppCompatActivity {
         // Actions to be executed when clicked on "Register" Button.
 
         buttonReg.setOnClickListener(view -> {
-            progressBar.setVisibility(View.VISIBLE);
-            buttonReg.setVisibility(View.GONE);
-            buttonBack_3.setVisibility(View.GONE);
+            // Change Visibility
+            toggleButtons(1, 1, 0);
 
-            String email, password, chkPassword;
             email = String.valueOf(editTextEmail.getText());
             password = String.valueOf(editTextPassword.getText());
             chkPassword = String.valueOf(editTextConfirmPassword.getText());
 
 
             if (TextUtils.isEmpty(email)){
-                Toast.makeText(Register.this, "Please Enter Email", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-                buttonReg.setVisibility(View.VISIBLE);
-                buttonBack_3.setVisibility(View.VISIBLE);
+                makeToastSmall("Please Enter Email");
+                toggleButtons(0, 0, 1);
                 return;
             }
 
             if (TextUtils.isEmpty(chkPassword)){
-                Toast.makeText(Register.this, "Please Confirm Password", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-                buttonReg.setVisibility(View.VISIBLE);
-                buttonBack_3.setVisibility(View.VISIBLE);
+                makeToastSmall("Please Confirm Password");
+                toggleButtons(0, 0, 1);
                 return;
             }
 
             if (TextUtils.isEmpty(password)){
-                Toast.makeText(Register.this, "Please Enter Password", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-                buttonReg.setVisibility(View.VISIBLE);
-                buttonBack_3.setVisibility(View.VISIBLE);
+                makeToastSmall("Please Enter Password");
+                toggleButtons(0, 0, 1);
                 return;
             }
 
             if (!(password).equals(chkPassword)){
-                Toast.makeText(Register.this, "Passwords Don't Match!", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-                buttonReg.setVisibility(View.VISIBLE);
-                buttonBack_3.setVisibility(View.VISIBLE);
+                makeToastSmall("Passwords Don't Match!");
+                toggleButtons(0, 0, 1);
                 return;
             }
 
@@ -279,18 +281,15 @@ public class Register extends AppCompatActivity {
             int passStrength = passwordStrength(password);
 
             if (passStrength == -1){
-                Toast.makeText(Register.this, "Passwords Is Too Weak!", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-                buttonReg.setVisibility(View.VISIBLE);
-                buttonBack_3.setVisibility(View.VISIBLE);
+                makeToastSmall("Password Is Too Weak!");
+                toggleButtons(0, 0, 1);
 
                 // Empty the edit text.
-                editTextConfirmPassword.setText("");
-                editTextPassword.setText("");
+                emptyEditText(1);
                 return;
             }
 
-            // TODO: ADD THE ADDITIONAL INFO IN REALTIME DB.
+
 
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
@@ -298,25 +297,39 @@ public class Register extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
 
                         if (task.isSuccessful()) {
-                            Toast.makeText(Register.this, "Account Created.",
-                                    Toast.LENGTH_SHORT).show();
 
-                            // Opening the Login Page
+                            // Save User Data
+                            // Find UID
+                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                            if (currentUser != null) {
+                                uid = currentUser.getUid();
+                            }
 
-                            openLoginWindow();
+                            // Save Data
+                            // saveUserData(firstName, lastName, DOB, email);
+
+
+                            Users users = new Users(firstName, lastName, DOB, email);
+                            db = FirebaseDatabase.getInstance();
+                            reference = db.getReference("Users");
+                            reference.child(uid).setValue(users).addOnCompleteListener(task1 -> {
+
+                                makeToastSmall("Account Created!");
+                                // Opening the Login Page
+                                openLoginWindow();
+
+                            });
+
 
                         }
 
                         else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(Register.this, "An Error Occurred.",
-                                    Toast.LENGTH_SHORT).show();
-                            buttonReg.setVisibility(View.VISIBLE);
-                            buttonBack_3.setVisibility(View.VISIBLE);
+                            makeToastSmall("An Error Occurred.");
+                            toggleButtons(0, 0, 1);
 
                             // Empty the edit text.
-                            editTextConfirmPassword.setText("");
-                            editTextPassword.setText("");
+                            emptyEditText(1);
 
                         }
                     });
@@ -326,6 +339,50 @@ public class Register extends AppCompatActivity {
     }
 
     // Other Functions
+
+    // Hide & UnHide Buttons
+    private void toggleButtons(int btn_Reg, int btn_Back3, int progBar){
+        // 1 = toggle OFF && 0 = toggle ON
+
+        // Btn Reg
+        if (btn_Reg == 1){
+            buttonReg.setVisibility(View.GONE);
+        }
+        if (btn_Reg == 0){
+            buttonReg.setVisibility(View.VISIBLE);
+        }
+
+        // Btn Back 3
+        if (btn_Back3 == 1){
+            buttonBack_3.setVisibility(View.GONE);
+        }
+        if (btn_Back3 == 0){
+            buttonBack_3.setVisibility(View.VISIBLE);
+        }
+
+        // Progress Bar
+        if (progBar == 1){
+            progressBar.setVisibility(View.GONE);
+        }
+        if (progBar == 0){
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    // Empty Edit Text
+    private void emptyEditText(int argument){
+        // 1 = Password & Confirm Password
+        if (argument == 1){
+            editTextConfirmPassword.setText("");
+            editTextPassword.setText("");
+        }
+    }
+
+    // Make Toast Message (Short)
+    private void makeToastSmall(String message){
+        Toast.makeText(Register.this, message, Toast.LENGTH_SHORT).show();
+    }
 
     // Open Date Picker
 

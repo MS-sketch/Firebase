@@ -170,7 +170,7 @@
             app:cardCornerRadius="28dp"
             android:layout_marginBottom="-20dp"
             android:id="@+id/card_name"
-            android:visibility="visible">
+            android:visibility="gone">
 
 
             <LinearLayout

@@ -1,61 +1,167 @@
 package com.ms.firebase;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.appcompat.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class HomeFragment extends Fragment {
 
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    String uid;
 
-    private String mParam1;
-    private String mParam2;
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+    FirebaseDatabase db;
+    DatabaseReference reference;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    RecyclerView recyclerView;
+    List<TaskDataClass> dataList;
+    TaskAdapter adapter;
+    TaskDataClass androidData;
+    SearchView searchView;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        // Assign the UID of the current User.
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            uid = currentUser.getUid();
+        }
+
+        // Init Of Variable
+
+        recyclerView = view.findViewById(R.id.recyclerView);
+        searchView = view.findViewById(R.id.search);
+
+        searchView.clearFocus();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchList(newText);
+                return true;
+            }
+        });
+
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        dataList = new ArrayList<>();
+
+
+        // Add Data To List
+        androidData = new TaskDataClass("History Homework", "19/12/2023",
+                "20/12/2023", R.drawable.study_red, "Due In 1 Day");
+
+        dataList.add(androidData);
+
+        androidData = new TaskDataClass("History Proj", "19/12/2023",
+                "20/12/2023", R.drawable.other_green, "Due In 1 Day");
+
+        dataList.add(androidData);
+
+        androidData = new TaskDataClass("Play", "19/12/2023",
+                "20/12/2023", R.drawable.other_green, "Due In 1 Day");
+
+        dataList.add(androidData);
+
+
+        adapter = new TaskAdapter(getContext(), dataList);
+
+        recyclerView.setAdapter(adapter);
+
+        return view;
+
     }
+
+
+    // Other Functions
+    // Search
+
+    private void searchList(String text){
+        List<TaskDataClass> dataSearchList = new ArrayList<>();
+        for (TaskDataClass data : dataList){
+            if (data.getTaskTitle().toLowerCase().contains(text.toLowerCase())){
+                dataSearchList.add(data);
+            }
+        }
+        if (dataSearchList.isEmpty()){
+            makeToastSmall("Not Found!");
+        }
+        else {
+            adapter.setSearchList(dataSearchList);
+        }
+    }
+
+
+
+    // Read Data From Firebase Realtime DB.
+
+    private void readData(String id){
+
+        reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.child(id).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                if (task.getResult().exists()){
+                    DataSnapshot dataSnapshot = task.getResult();
+                    String firstName = String.valueOf(dataSnapshot.child("firstName").getValue());
+                    String lastName = String.valueOf(dataSnapshot.child("lastName").getValue());
+                    String DOB = String.valueOf(dataSnapshot.child("dob").getValue());
+                    String email = String.valueOf(dataSnapshot.child("email").getValue());
+
+
+                }
+
+                else {
+                    makeToastSmall("User Doesn't Exist!");
+                }
+
+            }
+
+            else {
+                makeToastSmall("Failed to read data");
+            }
+        });
+
+
+    }
+
+
+    private void makeToastSmall(String message){
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+
 }

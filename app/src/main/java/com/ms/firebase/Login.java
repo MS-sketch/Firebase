@@ -56,56 +56,88 @@ public class Login extends AppCompatActivity {
         // Actions to be executed when clicked on "Login" Button.
 
         buttonLogin.setOnClickListener(view -> {
-            progressBar.setVisibility(View.VISIBLE);
-            buttonLogin.setVisibility(View.GONE);
+            toggleButtons(1,0);
 
             String email, password;
             email = String.valueOf(editTextEmail.getText());
             password = String.valueOf(editTextPassword.getText());
 
             if (TextUtils.isEmpty(email)){
-                Toast.makeText(Login.this, "Please Enter Email", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-                buttonLogin.setVisibility(View.VISIBLE);
+                makeToastSmall("Please Enter Email");
+                toggleButtons(0,1);
                 return;
             }
 
             if (TextUtils.isEmpty(password)){
-                buttonLogin.setVisibility(View.VISIBLE);
-                Toast.makeText(Login.this, "Please Enter Password", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-                buttonLogin.setVisibility(View.VISIBLE);
+                makeToastSmall("Please Enter Password");
+                toggleButtons(0,1);
                 return;
             }
 
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
 
-                        progressBar.setVisibility(View.GONE);
+                        toggleButtons(1,1);
 
                         if (task.isSuccessful()) {
-                            Toast.makeText(Login.this, "Signed In",
-                                    Toast.LENGTH_SHORT).show();
-
-
+                            makeToastSmall("Signed In!");
                             openMainActivity();
                         }
 
                         else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(Login.this, "Invalid Credentials!",
-                                    Toast.LENGTH_SHORT).show();
-                            buttonLogin.setVisibility(View.VISIBLE);
+                            makeToastSmall("Invalid Credentials!");
+
+                            // Empty Text
+                            toggleButtons(0,1);
 
                             // Empty the edit text.
-                            editTextEmail.setText("");
-                            editTextPassword.setText("");
+                            emptyEditText(1);
 
                         }
                     });
 
         });
 
+    }
+
+    // Other Functions
+
+    // Make Toast Message (Short)
+    private void makeToastSmall(String message){
+        Toast.makeText(Login.this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    // Toggle Button
+    private void toggleButtons(int btn_Login, int progBar){
+        // 1 = toggle OFF && 0 = toggle ON
+
+        // Btn Reg
+        if (btn_Login == 1){
+            buttonLogin.setVisibility(View.GONE);
+        }
+        if (btn_Login == 0){
+            buttonLogin.setVisibility(View.VISIBLE);
+        }
+
+
+        // Progress Bar
+        if (progBar == 1){
+            progressBar.setVisibility(View.GONE);
+        }
+        if (progBar == 0){
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    // Empty Edit Text
+    private void emptyEditText(int argument){
+        // 1 = Password & Email Password
+        if (argument == 1){
+            editTextEmail.setText("");
+            editTextPassword.setText("");
+        }
     }
 
 

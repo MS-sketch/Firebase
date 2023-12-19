@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TaskFlow</string>
+    <string name="app_name">Task Flow</string>
     <string name="login">Login</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -37,4 +37,6 @@
     <string name="next_step_2">Next (Step 2 of 3)</string>
     <string name="back_2">Back</string>
     <string name="warning_1">Note: The information entered cannot be changed later.</string>
+    <string name="back">Back</string>
+    <string name="show_all">Show All</string>
 </resources>
