@@ -11,7 +11,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
+
+import java.util.Objects;
 
 
 public class bottomNav extends AppCompatActivity {
@@ -21,13 +24,13 @@ public class bottomNav extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_bottom_nav);
 
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        // Find the NavController associated with the NavHostFragment
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {

@@ -31,9 +31,34 @@
             android:layout_height="wrap_content"
             android:id="@+id/recyclerView"
             android:layout_marginTop="8dp"
+            android:paddingBottom="80dp"
             android:scrollbars="vertical"
             android:layout_below="@+id/search"
             />
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="50dp">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/newTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                app:srcCompat="@drawable/ic_addnew_white"
+                app:useCompatPadding="true"
+                android:contentDescription="New Task"/>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+
 
 
 

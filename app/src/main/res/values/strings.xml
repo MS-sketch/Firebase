@@ -39,4 +39,22 @@
     <string name="warning_1">Note: The information entered cannot be changed later.</string>
     <string name="back">Back</string>
     <string name="show_all">Show All</string>
+    <string name="dd_mm_yyyy_ant">DD/MM/YYYY</string>
+    <string name="hh_mm_ss">HH/MM/SS</string>
+    <string name="create_to_do_task">Create To-Do Task</string>
+    <string name="give_your_task_a_name">Give Your Task A Name</string>
+    <string name="task_name">Task Name</string>
+    <string name="due_date_and_time">Due Date And Time:</string>
+    <string name="select_due_time">Select Due Time:</string>
+    <string name="work_ant">Work:</string>
+    <string name="select_your_prefered_work_type">Select Your Prefered Work Type</string>
+    <string name="study">Study</string>
+    <string name="other">Other</string>
+    <string name="assignment">Assignment</string>
+    <string name="writing_work">Writing Work</string>
+    <string name="current_template">Current Template:</string>
+    <string name="description_box">Description Box</string>
+    <string name="description">Description</string>
+    <string name="save_entry">Save Entry</string>
+    <string name="discard_entry">Discard Entry</string>
 </resources>

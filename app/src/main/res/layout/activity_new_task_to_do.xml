@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".newTaskToDo">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/todoActionBarCardView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/backToListView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_backarrow"
+
+                        android:background="@android:color/transparent"
+                        app:cornerRadius="20dp"
+                        android:paddingLeft="10dp"/>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/create_to_do_task"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center"
+                        android:paddingTop="13dp"/>
+
+                </FrameLayout>
+
+
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="20dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/give_your_task_a_name"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="10dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/taskName"
+                        android:hint="@string/task_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"/>
+
+                <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/due_date_and_time"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:paddingTop="15dp"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                android:paddingBottom="15dp"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Select Due Date:"
+                                    android:textSize="17sp"
+                                    android:paddingTop="15dp"
+                                    android:textStyle="bold"
+                                    android:paddingLeft="15dp"
+                                    android:paddingRight="15dp"/>
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingRight="15dp">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/dueDate"
+                                        android:hint="@string/dd_mm_yyyy_ant"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"/>
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"/>
+                        
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/select_due_time"
+                                android:textSize="17sp"
+                                android:paddingTop="15dp"
+                                android:textStyle="bold"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"/>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingRight="15dp">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/dueTime"
+                                    android:hint="@string/hh_mm_ss"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"/>
+                            </com.google.android.material.textfield.TextInputLayout>
+
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="15dp"/>
+
+
+                    </LinearLayout>
+
+                </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"/>
+
+                <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/work_ant"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="15dp"
+                            android:text="@string/select_your_prefered_work_type"
+                            android:textSize="17sp"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:textStyle="bold"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingLeft="15dp">
+
+                            <RadioGroup
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:id="@+id/workRadioGroup">
+
+                                <RadioButton
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/study"
+                                    android:id="@+id/studyRed"/>
+
+                                <RadioButton
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/other"
+                                    android:id="@+id/otherGreen"/>
+
+                                <RadioButton
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/assignment"
+                                    android:id="@+id/assignmentBlue"/>
+
+                                <RadioButton
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/writing_work"
+                                    android:id="@+id/writingYellow"/>
+
+
+                            </RadioGroup>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="10dp"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/current_template"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    android:paddingRight="20dp"/>
+
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_centerInParent="true"
+                                    app:cardCornerRadius="50dp">
+
+                                    <ImageView
+                                        android:id="@+id/roundedImageView"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:src="@drawable/template_resource_assignment_blue"
+                                        android:scaleType="centerCrop" />
+
+                                </androidx.cardview.widget.CardView>
+
+
+
+                            </LinearLayout>
+
+
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="15dp"/>
+
+                    </LinearLayout>
+
+
+                </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"/>
+
+                <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="15dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/description_box"
+                            android:textSize="20sp"
+                            android:textStyle="bold"/>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/descriptionBox"
+                                android:hint="@string/description"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textMultiLine"
+                                android:minLines="5"
+                                android:gravity="top"
+                                android:scrollbars="vertical"/>
+
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+                    </LinearLayout>
+
+
+                </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="20dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:text="@string/save_entry"
+                        android:id="@+id/btn_save"
+                        app:cornerRadius="12dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:text="@string/discard_entry"
+                        android:id="@+id/btn_discard"
+                        app:cornerRadius="12dp"
+                        android:backgroundTint="@color/studyRed"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="15dp"/>
+
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+
+        </ScrollView>
+
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

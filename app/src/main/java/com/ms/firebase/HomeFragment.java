@@ -1,6 +1,6 @@
 package com.ms.firebase;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,11 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.appcompat.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -40,6 +38,7 @@ public class HomeFragment extends Fragment {
     TaskAdapter adapter;
     TaskDataClass androidData;
     SearchView searchView;
+    FloatingActionButton newTask;
 
 
     @Override
@@ -59,6 +58,7 @@ public class HomeFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recyclerView);
         searchView = view.findViewById(R.id.search);
+        newTask = view.findViewById(R.id.newTask);
 
         searchView.clearFocus();
 
@@ -72,6 +72,26 @@ public class HomeFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 searchList(newText);
                 return true;
+            }
+        });
+
+        newTask.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), newTaskToDo.class);
+            startActivity(intent);
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy > 0){
+                    newTask.hide();
+                }
+                else{
+                    newTask.show();
+                }
+
             }
         });
 
@@ -96,6 +116,37 @@ public class HomeFragment extends Fragment {
                 "20/12/2023", R.drawable.other_green, "Due In 1 Day");
 
         dataList.add(androidData);
+
+        androidData = new TaskDataClass("History Homework", "19/12/2023",
+                "20/12/2023", R.drawable.study_red, "Due In 1 Day");
+
+        dataList.add(androidData);
+
+        androidData = new TaskDataClass("History Proj", "19/12/2023",
+                "20/12/2023", R.drawable.other_green, "Due In 1 Day");
+
+        dataList.add(androidData);
+
+        androidData = new TaskDataClass("Play", "19/12/2023",
+                "20/12/2023", R.drawable.other_green, "Due In 1 Day");
+
+        dataList.add(androidData);
+
+        androidData = new TaskDataClass("History Homework", "19/12/2023",
+                "20/12/2023", R.drawable.study_red, "Due In 1 Day");
+
+        dataList.add(androidData);
+
+        androidData = new TaskDataClass("History Proj", "19/12/2023",
+                "20/12/2023", R.drawable.other_green, "Due In 1 Day");
+
+        dataList.add(androidData);
+
+        androidData = new TaskDataClass("Play", "19/12/2023",
+                "20/12/2023", R.drawable.other_green, "Due In 1 Day");
+
+        dataList.add(androidData);
+
 
 
         adapter = new TaskAdapter(getContext(), dataList);
