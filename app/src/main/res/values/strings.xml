@@ -40,7 +40,7 @@
     <string name="back">Back</string>
     <string name="show_all">Show All</string>
     <string name="dd_mm_yyyy_ant">DD/MM/YYYY</string>
-    <string name="hh_mm_ss">HH/MM/SS</string>
+    <string name="hh_mm_ss">HH/MM</string>
     <string name="create_to_do_task">Create To-Do Task</string>
     <string name="give_your_task_a_name">Give Your Task A Name</string>
     <string name="task_name">Task Name</string>

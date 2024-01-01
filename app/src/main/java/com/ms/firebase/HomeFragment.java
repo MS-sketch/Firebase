@@ -105,6 +105,7 @@ public class HomeFragment extends Fragment {
         androidData = new TaskDataClass("History Homework", "19/12/2023",
                 "20/12/2023", R.drawable.study_red, "Due In 1 Day");
 
+
         dataList.add(androidData);
 
         androidData = new TaskDataClass("History Proj", "19/12/2023",

@@ -1,25 +1,33 @@
 package com.ms.firebase;
 
-import static androidx.fragment.app.FragmentManager.TAG;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -37,6 +45,13 @@ public class newTaskToDo extends AppCompatActivity {
     EditText titleET, dueDateET, dueTimeET, descriptionET;
     RadioGroup radioGroup;
 
+    RadioButton radioButtonStudyRed, radioButtonOtherGreen, radioButtonAssignmentBlue,
+            radioButtonWritingYellow;
+
+    ImageView imageViewColorType;
+
+    ProgressBar progressBar;
+
     // FIREBASE
     FirebaseAuth mAuth;
     FirebaseDatabase db;
@@ -44,7 +59,6 @@ public class newTaskToDo extends AppCompatActivity {
     String userID, workType, dateCreated, timeCreated;
 
     FirebaseFirestore dbFireStore;
-    int currentID = 0;
 
 
 
@@ -53,6 +67,8 @@ public class newTaskToDo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_task_to_do);
+
+        FirebaseApp.initializeApp(this);
 
         db = FirebaseDatabase.getInstance();
 
@@ -74,6 +90,18 @@ public class newTaskToDo extends AppCompatActivity {
 
         // RADIO GROUP
         radioGroup = findViewById(R.id.workRadioGroup);
+
+        // RADIO BTN
+        radioButtonStudyRed = findViewById(R.id.studyRed);
+        radioButtonWritingYellow = findViewById(R.id.writingYellow);
+        radioButtonAssignmentBlue = findViewById(R.id.assignmentBlue);
+        radioButtonOtherGreen = findViewById(R.id.otherGreen);
+
+        // IMAGE VIEW
+        imageViewColorType = findViewById(R.id.workType);
+
+        // Progress Bar
+        progressBar = findViewById(R.id.progressBar);
 
 
 
@@ -106,6 +134,12 @@ public class newTaskToDo extends AppCompatActivity {
         dueTimeET.setOnClickListener(v -> openTimeChooser());
 
 
+        radioButtonStudyRed.setOnClickListener(v -> imageViewColorType.setImageResource(R.drawable.template_resource_study_red));
+        radioButtonAssignmentBlue.setOnClickListener(v -> imageViewColorType.setImageResource(R.drawable.template_resource_assignment_blue));
+        radioButtonOtherGreen.setOnClickListener(v -> imageViewColorType.setImageResource(R.drawable.template_resource_other_green));
+        radioButtonWritingYellow.setOnClickListener(v -> imageViewColorType.setImageResource(R.drawable.template_resource_writing_yellow));
+
+
         // CLICKED ON SAVE BUTTON
         saveBTN.setOnClickListener(v -> {
             String title, dueDate, dueTime, description;
@@ -123,8 +157,8 @@ public class newTaskToDo extends AppCompatActivity {
             dateCreated = dayINIT + "/" + monthINIT + "/" + yearINIT;
 
 
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-            timeCreated = sdf.format(calendar.getTime());
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            timeCreated = String.valueOf(sdf.format(calendar.getTime()));
 
 
             int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
@@ -145,30 +179,39 @@ public class newTaskToDo extends AppCompatActivity {
                 makeToastSmall("Select a Work Type!");
             }
             else{
+
+                saveBTN.setVisibility(View.GONE);
+                discardBTN.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+
                 RadioButton selectedButton = findViewById(selectedRadioButtonId);
                 workType = String.valueOf(selectedButton.getText());
 
-                todoActivityDataStruct info = new todoActivityDataStruct(title, dueDate, dueTime,
-                        workType, description, dateCreated, timeCreated);
+                todoActivityDataStruct info = new todoActivityDataStruct();
 
-                // TODO: CONTACT FIREBASE REALTIME DB, AND GET A UNIQUE TASK ID, STARTING WITH 0.
-                //  ALSO WRITE BACK TO IT THAT THE NUMBER IS UPDATED EVERY TIME WHEN A NEW TASK IS
-                //  CREATED WITH THE LATEST ID. ALSO MAKE A NEW SUB DOC IN THE FIRESTORE TO STORE ENTRIES.
-
+                info.setTitle(title);
+                info.setDateCreated(dateCreated);
+                info.setTimeCreated(timeCreated);
+                info.setDueDate(dueDate);
+                info.setDueTime(dueTime);
+                info.setDescription(description);
+                info.setWorkType(workType);
 
                 writeTodo(info);
 
 
             }
 
-
         });
-
 
     }
 
 
-    private void readCurrentID(){
+
+    private void writeTodo(todoActivityDataStruct info) {
+
+        // Update DATA
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(userID);
         reference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()){
@@ -179,13 +222,11 @@ public class newTaskToDo extends AppCompatActivity {
                     if (longValue != null){
                         int newID = longValue.intValue();
                         newID++;
-                        currentID = newID;
+                        int currentID = newID;
 
                         reference.child("currentTaskID").setValue(currentID)
-                                .addOnSuccessListener(unused -> makeToastSmall("Updated ID!"))
+                                .addOnSuccessListener(unused -> writeData(info, currentID))
                                 .addOnFailureListener(e -> makeToastSmall("Task Failed!"));
-
-                        makeToastSmall(String.valueOf(currentID));
 
                     }
                 }
@@ -204,14 +245,18 @@ public class newTaskToDo extends AppCompatActivity {
 
     }
 
-    private void writeTodo(todoActivityDataStruct info){
-        readCurrentID();
+
+    private void writeData(todoActivityDataStruct info, int currentID){
+        // WRITE DATA
+
+        dbFireStore = FirebaseFirestore.getInstance();
+
         String id = String.valueOf(currentID);
         DocumentReference userRef = dbFireStore.collection("user_data").document(userID);
-        userRef.collection(id).add(info).addOnCompleteListener(task -> makeToastSmall("Saved!"));
+        userRef.collection("todo_list").document(id).set(info).addOnCompleteListener(task -> makeToastSmall("Saved!"));
+
         finish();
     }
-
 
     private void openDateChooser(){
 
@@ -230,7 +275,15 @@ public class newTaskToDo extends AppCompatActivity {
 
     private void openTimeChooser(){
 
-        // IMPLEMENT
+        Calendar calendar = Calendar.getInstance();
+        int hourOfDayINIT = calendar.get(Calendar.HOUR_OF_DAY);
+        int minuteINIT = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog dialog = new TimePickerDialog(this, (view, hours, minute)
+                -> dueTimeET.setText(hours +":"+ minute),
+                hourOfDayINIT, minuteINIT, true);
+
+        dialog.show();
 
     }
 
