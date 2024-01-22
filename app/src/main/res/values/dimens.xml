@@ -1,0 +1,5 @@
+<!-- res/values/dimens.xml -->
+<resources>
+    <dimen name="button_default_elevation">2dp</dimen>
+    <dimen name="button_pressed_elevation">8dp</dimen>
+</resources>

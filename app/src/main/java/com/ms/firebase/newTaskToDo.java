@@ -7,8 +7,11 @@ import androidx.cardview.widget.CardView;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -50,9 +53,7 @@ public class newTaskToDo extends AppCompatActivity {
     ProgressBar progressBar;
 
     // FIREBASE
-    FirebaseAuth mAuth;
     FirebaseDatabase db;
-    DatabaseReference reference;
     String userID, workType, dateCreated, timeCreated;
 
     FirebaseFirestore dbFireStore;
@@ -122,7 +123,10 @@ public class newTaskToDo extends AppCompatActivity {
         // FUNCTIONS
 
         // CLICKED ON THE BACK ARROW
-        imageButtonBack.setOnClickListener(v -> finish());
+        imageButtonBack.setOnClickListener(v -> {
+            backClickAnimation(imageButtonBack);
+            onAnimationEnd(imageButtonBack);
+        });
 
         // CLICK DISCARD BTN
         discardBTN.setOnClickListener(v -> finish());
@@ -219,6 +223,29 @@ public class newTaskToDo extends AppCompatActivity {
 
     // PRIVATE FUNCTIONS
 
+    private void backClickAnimation(View view) {
+        // Load the animation from the resources
+        Animation clickAnimation = AnimationUtils.loadAnimation(this, R.anim.back_btn_animation_on_click);
+
+        // Apply the animation to the view
+        view.startAnimation(clickAnimation);
+
+
+    }
+
+
+
+    public void onAnimationEnd(View v) {
+        // Code to be executed after the animation ends (150 ms delay)
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 35); // Delay in milliseconds
+    }
+
     // RETURN CURRENT DATE
     private String getCurrentDate(){
         Calendar calendar = Calendar.getInstance();
@@ -226,17 +253,13 @@ public class newTaskToDo extends AppCompatActivity {
         int monthINIT = calendar.get(Calendar.MONTH) + 1;
         int dayINIT = calendar.get(Calendar.DATE);
 
-        String today = dayINIT + "/" + monthINIT + "/" + yearINIT;
-
-        return today;
+        return dayINIT + "/" + monthINIT + "/" + yearINIT;
     }
 
     // RETURN CURRENT TIME
     private String getCurrentTime() {
         // Get the current time
         Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
 
         // Format the time into a string in 24-hour format
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());

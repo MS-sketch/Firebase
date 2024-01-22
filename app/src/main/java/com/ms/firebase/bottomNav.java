@@ -9,8 +9,9 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -52,9 +53,21 @@ public class bottomNav extends AppCompatActivity {
 
         }
     private void replaceFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-            .replace(R.id.nav_host_fragment, fragment)
-            .commit();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        // Set custom animations
+        fragmentTransaction.setCustomAnimations(
+                R.anim.slide_in_left,  // enter animation
+                R.anim.slide_out_left // exit animation
+        );
+
+        // Replace the current fragment with the new one
+        fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
+
+
+        // Commit the transaction
+        fragmentTransaction.commit();
     }
 
     @Override

@@ -402,9 +402,8 @@ public class Register extends AppCompatActivity {
 
     // Password Strength Check
     private int passwordStrength(String password){
-        String inputPassword = password;
 
-        int n = inputPassword.length();
+        int n = password.length();
 
         boolean hasLower = false;
         boolean hasUpper = false;
@@ -413,16 +412,16 @@ public class Register extends AppCompatActivity {
         String normalChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 ";
 
         for (int i = 0; i < n; i++) {
-            if (Character.isLowerCase(inputPassword.charAt(i))) {
+            if (Character.isLowerCase(password.charAt(i))) {
                 hasLower = true;
             }
-            if (Character.isUpperCase(inputPassword.charAt(i))) {
+            if (Character.isUpperCase(password.charAt(i))) {
                 hasUpper = true;
             }
-            if (Character.isDigit(inputPassword.charAt(i))) {
+            if (Character.isDigit(password.charAt(i))) {
                 hasDigit = true;
             }
-            if (normalChars.indexOf(inputPassword.charAt(i)) == -1) {
+            if (normalChars.indexOf(password.charAt(i)) == -1) {
                 specialChar = true;
             }
         }

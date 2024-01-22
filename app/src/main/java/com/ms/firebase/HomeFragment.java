@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.appcompat.widget.SearchView;
 
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,7 +32,6 @@ public class HomeFragment extends Fragment {
     String uid;
 
 
-    FirebaseDatabase db;
     DatabaseReference reference;
 
     RecyclerView recyclerView;

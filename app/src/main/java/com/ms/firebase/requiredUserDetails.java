@@ -2,17 +2,11 @@ package com.ms.firebase;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.DatePicker;
 
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.time.Year;
 import java.util.Calendar;
 
 public class requiredUserDetails extends AppCompatActivity {
@@ -31,12 +25,7 @@ public class requiredUserDetails extends AppCompatActivity {
 
         dateOfBirth.setFocusable(false);
 
-        dateOfBirth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDateChooser();
-            }
-        });
+        dateOfBirth.setOnClickListener(v -> openDateChooser());
 
     }
 
@@ -48,12 +37,7 @@ public class requiredUserDetails extends AppCompatActivity {
         int dayINIT = calendar.get(Calendar.DATE);
 
 
-        DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                dateOfBirth.setText(String.valueOf(year) + "/" + String.valueOf(month) + "/" + String.valueOf(day));
-            }
-        }, yearINIT, monthINIT, dayINIT);
+        DatePickerDialog dialog = new DatePickerDialog(this, (view, year, month, day) -> dateOfBirth.setText(year + "/" + month + "/" + day), yearINIT, monthINIT, dayINIT);
 
         dialog.show();
 
