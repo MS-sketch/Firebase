@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.appcompat.widget.SearchView;
+
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 public class HomeFragment extends Fragment {
@@ -39,6 +42,7 @@ public class HomeFragment extends Fragment {
     TaskDataClass androidData;
     SearchView searchView;
     FloatingActionButton newTask;
+
 
 
     @Override
@@ -94,6 +98,9 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
+
+
 
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1);

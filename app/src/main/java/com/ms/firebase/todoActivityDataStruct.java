@@ -71,7 +71,7 @@ public class todoActivityDataStruct {
         return timeCreated;
     }
 
-    public void setTimeCreated(String dateCreated) {
+    public void setTimeCreated(String timeCreated) {
         this.timeCreated = timeCreated;
     }
 

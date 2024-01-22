@@ -115,7 +115,7 @@
                    android:text="@string/show_all"
                    android:textStyle="bold"
                    android:textColor="@color/assignmentBlue"
-                   android:textSize="12sp"/>
+                   android:textSize="13sp" />
 
 
            </LinearLayout>

@@ -2,12 +2,12 @@ package com.ms.firebase;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,18 +16,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -49,6 +45,7 @@ public class newTaskToDo extends AppCompatActivity {
             radioButtonWritingYellow;
 
     ImageView imageViewColorType;
+    CardView imageCardViewWorkType;
 
     ProgressBar progressBar;
 
@@ -103,6 +100,9 @@ public class newTaskToDo extends AppCompatActivity {
         // Progress Bar
         progressBar = findViewById(R.id.progressBar);
 
+        // CARD VIEW
+        imageCardViewWorkType = findViewById(R.id.imageCardView);
+
 
 
         // INIT ARGS
@@ -134,10 +134,25 @@ public class newTaskToDo extends AppCompatActivity {
         dueTimeET.setOnClickListener(v -> openTimeChooser());
 
 
-        radioButtonStudyRed.setOnClickListener(v -> imageViewColorType.setImageResource(R.drawable.template_resource_study_red));
-        radioButtonAssignmentBlue.setOnClickListener(v -> imageViewColorType.setImageResource(R.drawable.template_resource_assignment_blue));
-        radioButtonOtherGreen.setOnClickListener(v -> imageViewColorType.setImageResource(R.drawable.template_resource_other_green));
-        radioButtonWritingYellow.setOnClickListener(v -> imageViewColorType.setImageResource(R.drawable.template_resource_writing_yellow));
+        radioButtonStudyRed.setOnClickListener(v -> {
+            imageCardViewWorkType.setVisibility(View.VISIBLE);
+            imageViewColorType.setImageResource(R.drawable.template_resource_study_red);
+        });
+
+        radioButtonAssignmentBlue.setOnClickListener(v -> {
+            imageCardViewWorkType.setVisibility(View.VISIBLE);
+            imageViewColorType.setImageResource(R.drawable.template_resource_assignment_blue);
+        });
+
+        radioButtonOtherGreen.setOnClickListener(v -> {
+            imageCardViewWorkType.setVisibility(View.VISIBLE);
+            imageViewColorType.setImageResource(R.drawable.template_resource_other_green);
+        });
+
+        radioButtonWritingYellow.setOnClickListener(v -> {
+            imageCardViewWorkType.setVisibility(View.VISIBLE);
+            imageViewColorType.setImageResource(R.drawable.template_resource_writing_yellow);
+        });
 
 
         // CLICKED ON SAVE BUTTON
@@ -149,16 +164,9 @@ public class newTaskToDo extends AppCompatActivity {
             dueTime = String.valueOf(dueTimeET.getText());
             description = String.valueOf(descriptionET.getText());
 
-            Calendar calendar = Calendar.getInstance();
-            int yearINIT = calendar.get(Calendar.YEAR);
-            int monthINIT = calendar.get(Calendar.MONTH) + 1;
-            int dayINIT = calendar.get(Calendar.DATE);
+            dateCreated = getCurrentDate();
 
-            dateCreated = dayINIT + "/" + monthINIT + "/" + yearINIT;
-
-
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            timeCreated = String.valueOf(sdf.format(calendar.getTime()));
+            timeCreated = getCurrentTime();
 
 
             int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
@@ -166,16 +174,16 @@ public class newTaskToDo extends AppCompatActivity {
             if (TextUtils.isEmpty(title)){
                 makeToastSmall("Enter Title");
             }
-            if (TextUtils.isEmpty(dueDate)){
+            else if (TextUtils.isEmpty(dueDate)){
                 makeToastSmall("Enter Due Date");
             }
-            if (TextUtils.isEmpty(dueTime)){
+            else if (TextUtils.isEmpty(dueTime)){
                 makeToastSmall("Enter Due Time");
             }
-            if (TextUtils.isEmpty(description)){
+            else if (TextUtils.isEmpty(description)){
                 makeToastSmall("Enter Description");
             }
-            if (selectedRadioButtonId == -1){
+            else if (selectedRadioButtonId == -1){
                 makeToastSmall("Select a Work Type!");
             }
             else{
@@ -184,9 +192,12 @@ public class newTaskToDo extends AppCompatActivity {
                 discardBTN.setVisibility(View.GONE);
                 progressBar.setVisibility(View.VISIBLE);
 
+                // GET SELECTED WORK TYPE.
                 RadioButton selectedButton = findViewById(selectedRadioButtonId);
                 workType = String.valueOf(selectedButton.getText());
 
+
+                // CREATE NEW DATA STRUCT
                 todoActivityDataStruct info = new todoActivityDataStruct();
 
                 info.setTitle(title);
@@ -197,7 +208,7 @@ public class newTaskToDo extends AppCompatActivity {
                 info.setDescription(description);
                 info.setWorkType(workType);
 
-                writeTodo(info);
+                writeTodoTask(info);
 
 
             }
@@ -206,9 +217,35 @@ public class newTaskToDo extends AppCompatActivity {
 
     }
 
+    // PRIVATE FUNCTIONS
+
+    // RETURN CURRENT DATE
+    private String getCurrentDate(){
+        Calendar calendar = Calendar.getInstance();
+        int yearINIT = calendar.get(Calendar.YEAR);
+        int monthINIT = calendar.get(Calendar.MONTH) + 1;
+        int dayINIT = calendar.get(Calendar.DATE);
+
+        String today = dayINIT + "/" + monthINIT + "/" + yearINIT;
+
+        return today;
+    }
+
+    // RETURN CURRENT TIME
+    private String getCurrentTime() {
+        // Get the current time
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        // Format the time into a string in 24-hour format
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return sdf.format(calendar.getTime());
+    }
 
 
-    private void writeTodo(todoActivityDataStruct info) {
+    // WRITE TO REAL TIME DB STEP 1
+    private void writeTodoTask(todoActivityDataStruct info) {
 
         // Update DATA
 
@@ -219,14 +256,16 @@ public class newTaskToDo extends AppCompatActivity {
                     DataSnapshot dataSnapshot = task.getResult();
                     Long longValue = dataSnapshot.child("currentTaskID").getValue(Long.class);
 
+                    // ADD 1 TO THE CURRENT TASK ID, WHICH IS USED FOR REFERENCE OF TASKS, PRIMARY KEY
                     if (longValue != null){
                         int newID = longValue.intValue();
                         newID++;
                         int currentID = newID;
 
+                        // CALL WRITE TASK, AFTER UPDATED SUCCESS FULLY
                         reference.child("currentTaskID").setValue(currentID)
-                                .addOnSuccessListener(unused -> writeData(info, currentID))
-                                .addOnFailureListener(e -> makeToastSmall("Task Failed!"));
+                                .addOnSuccessListener(unused -> writeDataFireStore(info, currentID))
+                                .addOnFailureListener(e -> makeToastSmall("Task Not Saved. Error Occurred!"));
 
                     }
                 }
@@ -245,8 +284,8 @@ public class newTaskToDo extends AppCompatActivity {
 
     }
 
-
-    private void writeData(todoActivityDataStruct info, int currentID){
+    // WRITE TO FIRE STORE STEP 2
+    private void writeDataFireStore(todoActivityDataStruct info, int currentID){
         // WRITE DATA
 
         dbFireStore = FirebaseFirestore.getInstance();

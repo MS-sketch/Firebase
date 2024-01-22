@@ -1,22 +1,20 @@
 package com.ms.firebase;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder> {
 
-    private Context context;
     private List<TaskDataClass> dataList;
 
     public void setSearchList(List <TaskDataClass> dataSearchList){
@@ -25,7 +23,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder> {
     }
 
     public TaskAdapter(Context context, List<TaskDataClass> dataList){
-        this.context = context;
         this.dataList = dataList;
     }
 
@@ -44,18 +41,22 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder> {
         holder.recDueOn.setText(dataList.get(position).getTaskDue());
         holder.recStatus.setText(dataList.get(position).getStatus());
 
-        holder.recCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: ADD
-            }
+        holder.recCard.setOnClickListener(v -> {
+            // TODO: ADD
         });
+
+        holder.reMoreInfo.setOnClickListener(v -> Toast.makeText(v.getContext(), "Clicked!", Toast.LENGTH_SHORT).show());
     }
+
 
     @Override
     public int getItemCount() {
         return dataList.size();
     }
+
+
+
+
 }
 
 class TaskViewHolder extends RecyclerView.ViewHolder{
